@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini LLM Application</title>
+    <style>
+        /* Global styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #222;
+            color: #fff;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Container styles */
+        .container {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            background-color: #333;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Heading styles */
+        h1 {
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        /* Textarea styles */
+        textarea {
+            width: calc(100% - 40px);
+            height: 100px;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: none;
+            font-size: 16px;
+            background-color: #444;
+            color: #fff;
+        }
+
+        /* Button styles */
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Response container styles */
+        #response {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #444;
+            color: #fff;
+            text-align: left;
+        }
+
+        /* Response paragraph styles */
+        #response p {
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* Image styles */
+        .gemini-image {
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
+            display: none; /* Initially hide the image */
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Gemini LLM Application</h1>
+        <textarea id="question" placeholder="Enter your question..."></textarea>
+        <br>
+        <button onclick="askQuestion()">Ask</button>
+        <div id="response"></div>
+        <img id="geminiImage" class="gemini-image" src="" alt="Gemini Image">
+    </div>
+
+    <script>
+        function askQuestion() {
+            var question = document.getElementById("question").value.trim();
+            if (question === "") return;
+
+            fetch('/ask', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ question: question })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("response").innerHTML = `<p><strong>Response:</strong><br>${data.response}</p>`;
+                // Update image source based on response (replace 'data.image_url' with your actual image URL)
+                document.getElementById("geminiImage").src = 'https://images.unsplash.com/photo-1619278286003-5c995eafdba7'; // Example image
+                document.getElementById("geminiImage").style.display = "block"; // Show the image
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
